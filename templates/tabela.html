@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% block tabela %}
+    <table class="table" id="tabela">
+        <tr class="table__header">
+            <th class="table__header__cell" ></th>
+            <th class="table__header__cell" ></th>
+            <th class="table__header__cell" colspan="2">Premio</th>
+            <th class="table__header__cell">Breakeven</th>
+            <th class="table__header__cell" colspan="3">Put Buy</th>
+            <th class="table__header__cell" colspan="3">Put Sell</th>
+            <th class="table__header__cell" >Atual</th>
+            <th class="table__header__cell" colspan="3">Call Sell</th>
+            <th class="table__header__cell" colspan="3">Call Buy</th>
+            <th class="table__header__cell">Breakeven</th>
+        </tr>
+        <tr class="table__header">
+            <th class="table__header__cell">Ativo</th>
+            <th class="table__header__cell">Seleção</th>
+            <th class="table__header__cell">Total</th>
+            <th class="table__header__cell">%</th>
+            <th class="table__header__cell">Down</th>
+            <th class="table__header__cell">Código</th>
+            <th class="table__header__cell">Premio</th>
+            <th class="table__header__cell">Strike</th>
+            <th class="table__header__cell">Código</th>
+            <th class="table__header__cell">Premio</th>
+            <th class="table__header__cell">Strike</th>
+            <th class="table__header__cell">Ativo</th>
+            <th class="table__header__cell">Strike</th>
+            <th class="table__header__cell">Premio</th>
+            <th class="table__header__cell">Código</th>
+            <th class="table__header__cell">Strike</th>
+            <th class="table__header__cell">Premio</th>
+            <th class="table__header__cell">Código</th>
+            <th class="table__header__cell">Up</th>
+        </tr>
+        {% for item in all_data %}
+        <tr class="table__row">
+            <!-- Resumo -->
+            <td class="table__row__text">{{ item[0] }}</td>
+            <td><input type='radio' name='select' value="{{ item[2] }}">
+            <td class="table__row__number">{{ "%.2f"|format(item[3]|float) }}</td>
+            <td class="table__row__number">{{ "%.2f"|format(item[3]|float/item[1] * 100) }}</td>
+            <td class="table__row__number">{{ "%.2f"|format(item[1] - item[3]|float) }}</td>
+            <!-- Perna da Compra -->
+            {% if item[4] != 'X' %}
+            <td class="table__row__text">{{ item[4] }}</td>
+            <td class="table__row__number">{{ "%.2f"|format(item[5]|float) }}</td>
+            <td class="table__row__strike">{{ item[6] }}</td>
+            {% else %}
+            <td class="table__row__text"></td>
+            <td class="table__row__number"></td>
+            <td class="table__row__strike"></td>
+            {% endif %}
+            <!-- Perna da Venda -->
+            {% if item[7] != 'X' %}
+            <td class="table__row__text">{{ item[7] }}</td>
+            <td class="table__row__number">{{ "%.2f"|format(item[8]|float) }}</td>
+            <td class="table__row__strike">{{ item[9] }}</td>
+            {% else %}
+            <td class="table__row__text"></td>
+            <td class="table__row__number"></td>
+            <td class="table__row__strike"></td>
+            {% endif %}
+            <td class="table__row__central">{{ "%.2f"|format(item[1]|float) }}</td>
+            <!-- Perna da Venda -->
+            {% if item[10] !='X' %}
+            <td class="table__row__strike">{{ item[10] }}</td>
+            <td class="table__row__number">{{ "%.2f"|format(item[11]|float) }}</td>
+            <td class="table__row__text">{{ item[12] }}</td>
+            {% else %}
+            <td class="table__row__strike"></td>
+            <td class="table__row__number"></td>
+            <td class="table__row__text"></td>
+            {% endif %}
+            <!-- Perna da Compra -->
+            {% if item[13] !='X' %}
+            <td class="table__row__strike">{{ item[13] }}</td>
+            <td class="table__row__number">{{ "%.2f"|format(item[14]|float) }}</td>
+            <td class="table__row__text">{{ item[15] }}</td>
+            {% else %}
+            <td class="table__row__strike"></td>
+            <td class="table__row__number"></td>
+            <td class="table__row__text"></td>
+            {% endif %}
+            <td class="table__row__number">{{ "%.2f"|format(item[1] + item[3]|float) }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

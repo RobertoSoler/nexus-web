@@ -1,0 +1,280 @@
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200;300;400;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: #191c1e;
+  color: white;
+  font-family: Inconsolata;
+  font-size: 12px;
+  font-weight: 300;
+}
+
+.main {
+  border: 1px dashed firebrick;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+}
+
+.session_title {
+  text-align: center;
+}
+
+.parameters {
+  border: 1px dashed firebrick;
+  width: 15vw;
+  height: 100vh;
+  display: block;  
+}
+
+.parameters_s1 {
+  border: 1px dashed firebrick;
+  width: 20vw;
+  height: 30vh;
+}
+
+.parametros_2a {
+  display: flex;
+  font-weight: normal;
+}
+
+.parametros_3a {
+  margin-top: 12px;
+  border-top: 1px solid;
+  height: 480px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+#vencimento {
+  padding: 6px;
+  display: flex;
+  border-top: 1px solid silver;
+  border-bottom: 1px solid silver;
+}
+
+.painel {
+  border: 1px dashed firebrick;
+  width: 60vw;
+  height: 100vh;
+}
+
+.charts {
+  border: 1px dashed firebrick;
+  width: 25vw;
+  height: 100vh;
+}
+.charts_1 {
+  border: 1px dashed firebrick;
+  width: 100%;
+}
+
+.charts_2 {
+  border: 1px dashed firebrick;
+  width: 100%;
+}
+
+.button-15 {
+  background-image: linear-gradient(#42A1EC, #0070C9);
+  border: 1px solid #0077CC;
+  border-radius: 4px;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  cursor: pointer;
+  direction: ltr;
+  font-size: 17px;
+  font-weight: 400;
+  letter-spacing: -.022em;
+  line-height: 1.47059;
+  min-width: 30px;
+  overflow: visible;
+  padding: 4px 15px;
+  text-align: center;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  white-space: nowrap;
+}
+
+.button-15:disabled {
+  cursor: default;
+  opacity: .3;
+}
+
+.button-15:hover {
+  background-image: linear-gradient(#51A9EE, #147BCD);
+  border-color: #1482D0;
+  text-decoration: none;
+}
+
+.button-15:active {
+  background-image: linear-gradient(#3D94D9, #0067B9);
+  border-color: #006DBC;
+  outline: none;
+}
+
+.button-15:focus {
+  box-shadow: rgba(131, 192, 253, 0.5) 0 0 0 3px;
+  outline: none;
+}
+
+/*
+ Only custom marker for summary/details
+ For cross browser compatible styling hide Firefox's marker by setting summary { display: block }
+ and Chrome and Safari's marker by setting ::-webkit-details-marker {display: none;}
+*/
+summary {
+  display: block;
+  cursor: pointer;
+  outline: 0; 
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+
+.tree-nav__item {
+  display: block;
+  white-space: nowrap;
+  color: #ccc;
+  position: relative;
+}
+
+.tree-nav__item.is-expandable::before {
+  border-left: 1px solid #333;
+  content: "";
+  height: 100%;
+  left: 0.8rem;
+  position: absolute;
+  top: 2.4rem;
+  height: calc(100% - 2.4rem);
+}
+
+.tree-nav__item .tree-nav__item {
+  margin-left: 1.2rem;
+}
+
+.tree-nav__item.is-expandable[open] > .tree-nav__item-title::before {
+  font-family: "ionicons";
+  transform: rotate(90deg);
+}
+
+.tree-nav__item.is-expandable > .tree-nav__item-title {
+  padding-left: 1.2rem;
+}
+
+.tree-nav__item.is-expandable > .tree-nav__item-title::before {
+  position: absolute;
+  will-change: transform;
+  transition: transform 300ms ease;
+  font-family: "ionicons";
+  color: #fff;
+  font-size: 1.1rem;
+  content: "\f125";
+  left: 0;
+  display: inline-block;
+  width: 1.6rem;
+  text-align: center;
+}
+
+.tree-nav__item-title {
+  cursor: pointer;
+  display: block;
+  outline: 0;
+  color: #fff;
+  font-size: 16px;
+  line-height: 1.8rem;
+  text-align: left;
+  margin-left: 0.8rem;
+}
+
+.tree-nav__item-title .icon {
+  display: inline;
+  padding-left: 1.6rem;
+  margin-right: 0.8rem;
+  color: #666;
+  font-size: 1.4rem;
+  position: relative;
+}
+
+.tree-nav__item-title .icon::before {
+  top: 0;
+  position: absolute;
+  left: 0;
+  display: inline-block;
+  width: 1.6rem;
+  text-align: center;
+}
+
+.tree-nav__item-input {
+  width: 32px;
+  border: none;
+  border-bottom: 1px solid silver;
+  margin-left: 4px;
+}
+
+.tree-nav__item-check {
+  height: 20px;
+  width: 20px;
+  margin-left: 8px;
+}
+
+.tree-nav__item-title::-webkit-details-marker {
+  display: none;
+}
+
+/* ====================TABELA======================================== */
+
+.table {
+  border: 1px dashed yellow;
+  width: 100%;
+  border-top: 1px solid silver;
+  font-weight: normal;
+  font-size: 12px;
+  border-collapse: collapse;
+  overflow-y: auto;
+}
+
+tr {
+  border-bottom: 1px solid black;
+  height: 14px;
+} 
+
+th {
+  border-bottom: 2px solid gray;
+}
+
+.table__header {
+  text-align: center;
+  background-color: #333;
+}
+
+.table__row__strike {
+  font-weight: bold;
+  text-align: right;
+  padding-right: 4px;
+  padding-left: 4px;
+}
+
+.table__row__number {
+  text-align: right;
+  padding-right: 4px;
+}
+
+.table__row__text {
+  text-align: left;
+  padding-left: 4px;
+}
+
+.table__row__central {
+  text-align: right;
+  background-color: darkslategray;
+  font-weight: bold;
+  padding-right: 4px;
+  padding-left: 4px;
+}

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+    <script>
+        var site = '{{ tabela|tojson }}';
+    </script>
+<body>
+    <div class="main">
+        <div class="parameters">
+            <h3 class="session_title" style="font-size: 24px">PARAMETERS</h>
+                <div id="ativos">
+                    <form action="/add" method="POST">
+                        <select name="select_itens" style="width: 80px;">
+                            {% for item in ativos %}
+                            <option value="{{ item['ticker'] }}">{{ item['ticker'] }}</option> 
+                            {% endfor %}
+                        </select>
+                        <input type="submit" style="width: 80px;" value="Incluir">
+                    </form>
+                </div>
+                <div id="carteira" style="text-align: left; margin-left: 8px;">
+                    <form action="/remove" method="POST">
+                        {% for item in carteira %}
+                        <input type="checkbox" name="check" id="{{ item }}" value="{{ item }}">
+                        <label for="{{ item }}" name="{{ item }}">{{ item }}</label><br>
+                        {% endfor %}
+                        <input type="submit" value="Excluir">
+                    </form>
+                </div>
+            <form action="/scan" id="form1" method="post">
+                <div id="vencimento">
+                    <label for="selectVencto">Vencimento:</label>
+                    <select name="selectVencto" style="width: 128px; border: none; margin-left: 4px;">
+                        {% for item in series %}
+                            {% if item['data'] == parameters['vencimento']['data'] %}
+                                <option value="{{ item['data'] }}" selected>{{ item['data'] }} {{ item['du'] }} du</option>
+                            {% else %}
+                                <option value="{{ item['data'] }}">{{ item['data'] }} {{ item['du'] }} du</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    <input type="text" id="vencto" name="vencimento" style="width: 72px; border: none; margin-left: 4px; visibility: hidden;" value="{{ parameters['vencimento']['du'] }} dias uteis">
+                    <input type="text" id="serieC" name="serieCall" style="width: 14px; border: none; margin-left: 4px; visibility: hidden;" value="{{ parameters['vencimento']['serieCall'] }}">
+                    <input type="text" id="serieP" name="seriePut" style="width: 14px; border: none; margin-left: 4px; visibility: hidden;" value="{{ parameters['vencimento']['seriePut'] }}">
+                </div>
+                <div class="parametros_2a">
+                    <div id="operacoes" style="text-align: left; margin-left: 8px;">
+                        <p>Operações</p>
+                        {% for item in operacoes_disponiveis %}
+                            {% if item in operacoes_escolhidas %}
+                            <input type="checkbox" name="check2" id="item" value="{{ item }}" checked>
+                            {% else %}
+                            <input type="checkbox" name="check2" id="item" value="{{ item }}">
+                            {% endif %}
+                            <label for="{{ item }}" name="{{ item }}">{{ item }}</label><br>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="parametros_3a">
+                    <p style="margin-top: 12px;">Parâmetros das Operações</p>
+                    <!-- SHORT OPERATIONS -->
+                    <details class="tree-nav__item is-expandable">
+                        <summary class="tree-nav__item-title">Short</summary>
+                        {% for i in px.index %}
+                            {% if px['tipo'][i]=='S' %}
+                                <details class="tree-nav__item is-expandable">
+                                    <summary class="tree-nav__item-title">{{ px['nome'][i] }}</summary>
+                                    <div class="tree-nav__item">
+                                        <a class="tree-nav__item-title"><i class="icon ion-ios-bookmarks"></i>Premio Mín ($):<input type="text" class="tree-nav__item-input" name="{{'A_' ~ i}}" value="{{ px['pre_min_fin'][i] }}"></a>
+                                        <a class="tree-nav__item-title"><i class="icon ion-ios-bookmarks"></i>Premio Mín (%):<input type="text" class="tree-nav__item-input" name="{{'B_' ~ i}}" value="{{ px['pre_min_perc'][i] }}"></a>
+                                        {% if px['movto_espe'][i]==true %}
+                                            <a class="tree-nav__item-title"><i class="icon ion-ios-bookmarks"></i>Mov esperado:<input type="checkbox" class="tree-nav__item-check" name="{{'C_' ~ i}}" checked></a>
+                                        {% else %}
+                                            <a class="tree-nav__item-title"><i class="icon ion-ios-bookmarks"></i>Mov esperado:<input type="checkbox" name="{{'C_' ~ i}}"></a>
+                                        {% endif %}
+                                        {% if px['valid'][i] > 3 %}
+                                            <a class="tree-nav__item-title"><i class="icon ion-ios-bookmarks"></i>Delta Máx:<input type="text" class="tree-nav__item-input" name="{{'D_' ~ i}}" value="{{ px['delta_max'][i] }}"></a>
+                                        {% endif %}
+                                        {% if px['valid'][i] > 4 %}
+                                        <a class="tree-nav__item-title"><i class="icon ion-ios-bookmarks"></i>Gain Mín Spread (%):<input type="text" class="tree-nav__item-input" name="{{'E_' ~ i}}" value="{{ px['gain_spread'][i] }}"></a>
+                                        {% endif %}
+                                    </div>
+                                </details>
+                            {% endif %}
+                        {% endfor %}
+                    </details>
+                    <!-- LONG OPERATIONS -->
+                    <details class="tree-nav__item is-expandable">
+                        <summary class="tree-nav__item-title">Long</summary>
+                        <details class="tree-nav__item is-expandable">
+                            <summary class="tree-nav__item-title">Strangle</summary>
+                            <div class="tree-nav__item">
+                                <a class="tree-nav__item-title"><i class="icon ion-ios-bookmarks"></i>Premio Mínimo:<input type="text" id="username" name="username"></a>
+                                <a class="tree-nav__item-title"><i class="icon ion-ios-bookmarks"></i>Fora do Movimento esperado:<input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"></a>
+                                <a class="tree-nav__item-title"><i class="icon ion-ios-bookmarks"></i>Delta Máximo:<input type="text" id="username" name="username"></a>
+                            </div>
+                        </details>
+                        <details class="tree-nav__item is-expandable">
+                            <summary class="tree-nav__item-title">Iron Condor</summary>
+                            <div class="tree-nav__item">
+                                <a class="tree-nav__item-title"><i class="icon ion-ios-bookmarks"></i>Premio Mínimo:<input type="text" id="username" name="username"></a>
+                                <a class="tree-nav__item-title"><i class="icon ion-ios-bookmarks"></i>Fora do Movimento esperado:<input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"></a>
+                                <a class="tree-nav__item-title"><i class="icon ion-ios-bookmarks"></i>Delta Máximo:<input type="text" id="username" name="username"></a>
+                            </div>
+                        </details>
+                        <details class="tree-nav__item is-expandable">
+                            <summary class="tree-nav__item-title">Call Spread</summary>
+                            <div class="tree-nav__item">
+                                <a class="tree-nav__item-title"><i class="icon ion-ios-bookmarks"></i>Premio Mínimo:<input type="text" id="username" name="username"></a>
+                                <a class="tree-nav__item-title"><i class="icon ion-ios-bookmarks"></i>Fora do Movimento esperado:<input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"></a>
+                                <a class="tree-nav__item-title"><i class="icon ion-ios-bookmarks"></i>Delta Máximo:<input type="text" id="username" name="username"></a>
+                            </div>
+                        </details>
+                    </details>
+                </div>
+                <!-- <input type="submit" value="Scan"> -->
+                <button type="submit" class="button-15" form="form1" value="Submit">SCAN</button>
+            </form>
+        </div>
+        <div class="painel">
+            <h3 class="session_title" style="font-size: 24px">SCAN TABLE</h>
+                <table class="table" id="tabela">
+                    <tr class="table__header">
+                        <th class="table__header__cell" ></th>
+                        <th class="table__header__cell" ></th>
+                        <th class="table__header__cell" ></th>
+                        <th class="table__header__cell" colspan="2">Premio</th>
+                        <th class="table__header__cell">Brk</th>
+                        <th class="table__header__cell" colspan="4">Put Buy</th>
+                        <th class="table__header__cell" colspan="4">Put Sell</th>
+                        <th class="table__header__cell" >Atual</th>
+                        <th class="table__header__cell" colspan="4">Call Sell</th>
+                        <th class="table__header__cell" colspan="4">Call Buy</th>
+                        <th class="table__header__cell">Brk</th>
+                    </tr>
+                    <tr class="table__header">
+                        <th class="table__header__cell">Op</th>
+                        <th class="table__header__cell">Ativo</th>
+                        <th class="table__header__cell">Sel</th>
+                        <th class="table__header__cell">Total</th>
+                        <th class="table__header__cell">%</th>
+                        <th class="table__header__cell">Down</th>
+                        <th class="table__header__cell">Cod</th>
+                        <th class="table__header__cell">Pre</th>
+                        <th class="table__header__cell">&Delta;</th>
+                        <th class="table__header__cell">Str</th>
+                        <th class="table__header__cell">Cod</th>
+                        <th class="table__header__cell">Pre</th>
+                        <th class="table__header__cell">&Delta;</th>
+                        <th class="table__header__cell">Str</th>
+                        <th class="table__header__cell">Ativo</th>
+                        <th class="table__header__cell">Str</th>
+                        <th class="table__header__cell">&Delta;</th>
+                        <th class="table__header__cell">Pre</th>
+                        <th class="table__header__cell">Cod</th>
+                        <th class="table__header__cell">Str</th>
+                        <th class="table__header__cell">&Delta;</th>
+                        <th class="table__header__cell">Pre</th>
+                        <th class="table__header__cell">Cod</th>
+                        <th class="table__header__cell">Up</th>
+                    </tr>
+                    {% for item in tabela %}
+                    <tr class="table__row">
+                        <!-- Resumo -->
+                        <td class="table__row__text">{{ item[20] }}</td>
+                        <td class="table__row__text">{{ item[0] }}</td>
+                        <td><input type='radio' name='select' value="{{ item[2] }}">
+                        <td class="table__row__number">{{ "%.2f"|format(item[3]|float) }}</td>
+                        <td class="table__row__number">{{ "%.2f"|format(item[3]|float/item[1] * 100) }}</td>
+                        <td class="table__row__number" style="border-right: 1px solid silver;">{{ "%.2f"|format(item[1] - item[3]|float) }}</td>
+                        <!-- Perna da Compra -->
+                        {% if item[4] != '9999' %}
+                        <td class="table__row__text">{{ item[4] }}</td>
+                        <td class="table__row__number">{{ "%.2f"|format(item[6]|float) }}</td>
+                        <td class="table__row__number">{{ "%.2f"|format(item[7]|float) }}</td>
+                        <td class="table__row__strike">{{ item[5] }}</td>
+                        {% else %}
+                        <td class="table__row__text"></td>
+                        <td class="table__row__number"></td>
+                        <td class="table__row__number"></td>
+                        <td class="table__row__strike"></td>
+                        {% endif %}
+                        <!-- Perna da Venda -->
+                        {% if item[8] != '9999' %}
+                        <td class="table__row__text">{{ item[8] }}</td>
+                        <td class="table__row__number">{{ "%.2f"|format(item[10]|float) }}</td>
+                        <td class="table__row__number">{{ "%.2f"|format(item[11]|float) }}</td>
+                        <td class="table__row__strike">{{ "%.2f"|format(item[9]|float) }}</td>
+                        {% else %}
+                        <td class="table__row__text"></td>
+                        <td class="table__row__number"></td>
+                        <td class="table__row__number"></td>
+                        <td class="table__row__strike"></td>
+                        {% endif %}
+                        <td class="table__row__central">{{ "%.2f"|format(item[1]|float) }}</td>
+                        <!-- Perna da Venda -->
+                        {% if item[12] !='9999' %}
+                        <td class="table__row__strike">{{ "%.2f"|format(item[13]|float) }}</td>
+                        <td class="table__row__number">{{ "%.2f"|format(item[15]|float) }}</td>
+                        <td class="table__row__number">{{ "%.2f"|format(item[14]|float) }}</td>
+                        <td class="table__row__text">{{ item[12] }}</td>
+                        {% else %}
+                        <td class="table__row__strike"></td>
+                        <td class="table__row__number"></td>
+                        <td class="table__row__number"></td>
+                        <td class="table__row__text"></td>
+                        {% endif %}
+                        <!-- Perna da Compra -->
+                        {% if item[16] !='9999' %}
+                        <td class="table__row__strike">{{ "%.2f"|format(item[17]|float) }}</td>
+                        <td class="table__row__number">{{ "%.2f"|format(item[19]|float) }}</td>
+                        <td class="table__row__number">{{ "%.2f"|format(item[18]|float) }}</td>
+                        <td class="table__row__text">{{ item[16] }}</td>
+                        {% else %}
+                        <td class="table__row__strike"></td>
+                        <td class="table__row__number"></td>
+                        <td class="table__row__number"></td>
+                        <td class="table__row__text"></td>
+                        {% endif %}
+                        <td class="table__row__number">{{ "%.2f"|format(item[1] + item[3]|float) }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+        </div>
+        <div class="charts">
+            <h2 class="session_title">CHART</h>
+                <div class="charts_1">
+                    <h2>Chart1</h>
+                </div>
+                <div class="charts_2">
+                    <h2>Chart2</h>
+                </div>
+        </div>
+    </div>
+    <script src="../static/script/main.js"></script>
+</body>
+</html>

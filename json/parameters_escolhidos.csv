@@ -1,0 +1,7 @@
+tipo,nome,valid,pre_min_fin,pre_min_perc,movto_espe,delta_max,gain_spread
+S,S Strangle,4,1.00,1.00,TRUE,0.30,
+S,S Iron Condor,4,1.00,1.00,TRUE,0.30,
+S,S Jade Lizard,4,1.00,1.00,TRUE,0.30,
+S,S Straddle,3,1.00,1.00,TRUE,,
+S,S Put Spread,5,1.00,1.00,TRUE,0.30,0.30
+S,S Call Spread,5,1.00,1.00,TRUE,0.30,0.30

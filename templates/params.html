@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+    <head>    
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.css" rel="stylesheet" type="text/css"/>
+        <link rel="stylesheet" href="{{url_for('static',filename='css/main.css')}}">
+    </head>
+<body>
+    <nav class="tree-nav">
+        <form action="/teste" method="post">
+            <!-- SHORT OPERATIONS -->
+            <details class="tree-nav__item is-expandable">
+                <summary class="tree-nav__item-title">Short</summary>
+                {% for i in px.index %}
+                    {% if px['tipo'][i]=='S' %}
+                        <details class="tree-nav__item is-expandable">
+                            <summary class="tree-nav__item-title">{{ px['nome'][i] }}</summary>
+                            <div class="tree-nav__item">
+                                <a class="tree-nav__item-title"><i class="icon ion-ios-bookmarks"></i>Premio Mínimo ($):<input type="text" name="{{'A_' ~ i}}" value="{{ px['pre_min_fin'][i] }}"></a>
+                                <a class="tree-nav__item-title"><i class="icon ion-ios-bookmarks"></i>Premio Mínimo (%):<input type="text" name="{{'B_' ~ i}}" value="{{ px['pre_min_perc'][i] }}"></a>
+                                {% if px['movto_espe'][i]==true %}
+                                    <a class="tree-nav__item-title"><i class="icon ion-ios-bookmarks"></i>Fora do Movimento esperado:<input type="checkbox" name="{{'C_' ~ i}}" checked></a>
+                                {% else %}
+                                    <a class="tree-nav__item-title"><i class="icon ion-ios-bookmarks"></i>Fora do Movimento esperado:<input type="checkbox" name="{{'C_' ~ i}}"></a>
+                                {% endif %}
+                                {% if px['valid'][i] > 3 %}
+                                    <a class="tree-nav__item-title"><i class="icon ion-ios-bookmarks"></i>Delta Máximo:<input type="text" name="{{'D_' ~ i}}" value="{{ px['delta_max'][i] }}"></a>
+                                {% endif %}
+                                {% if px['valid'][i] > 4 %}
+                                <a class="tree-nav__item-title"><i class="icon ion-ios-bookmarks"></i>Ganho Mínimo no Spread (%):<input type="text" name="{{'E_' ~ i}}" value="{{ px['gain_spread'][i] }}"></a>
+                                {% endif %}
+                            </div>
+                        </details>
+                    {% endif %}
+                {% endfor %}
+            </details>
+            <!-- LONG OPERATIONS -->
+            <details class="tree-nav__item is-expandable">
+                <summary class="tree-nav__item-title">Long</summary>
+                <details class="tree-nav__item is-expandable">
+                    <summary class="tree-nav__item-title">Strangle</summary>
+                    <div class="tree-nav__item">
+                        <a class="tree-nav__item-title"><i class="icon ion-ios-bookmarks"></i>Premio Mínimo:<input type="text" id="username" name="username"></a>
+                        <a class="tree-nav__item-title"><i class="icon ion-ios-bookmarks"></i>Fora do Movimento esperado:<input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"></a>
+                        <a class="tree-nav__item-title"><i class="icon ion-ios-bookmarks"></i>Delta Máximo:<input type="text" id="username" name="username"></a>
+                    </div>
+                </details>
+                <details class="tree-nav__item is-expandable">
+                    <summary class="tree-nav__item-title">Iron Condor</summary>
+                    <div class="tree-nav__item">
+                        <a class="tree-nav__item-title"><i class="icon ion-ios-bookmarks"></i>Premio Mínimo:<input type="text" id="username" name="username"></a>
+                        <a class="tree-nav__item-title"><i class="icon ion-ios-bookmarks"></i>Fora do Movimento esperado:<input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"></a>
+                        <a class="tree-nav__item-title"><i class="icon ion-ios-bookmarks"></i>Delta Máximo:<input type="text" id="username" name="username"></a>
+                    </div>
+                </details>
+                <details class="tree-nav__item is-expandable">
+                    <summary class="tree-nav__item-title">Call Spread</summary>
+                    <div class="tree-nav__item">
+                        <a class="tree-nav__item-title"><i class="icon ion-ios-bookmarks"></i>Premio Mínimo:<input type="text" id="username" name="username"></a>
+                        <a class="tree-nav__item-title"><i class="icon ion-ios-bookmarks"></i>Fora do Movimento esperado:<input type="checkbox" id="vehicle1" name="vehicle1" value="Bike"></a>
+                        <a class="tree-nav__item-title"><i class="icon ion-ios-bookmarks"></i>Delta Máximo:<input type="text" id="username" name="username"></a>
+                    </div>
+                </details>
+            </details>
+            <input type="submit" value="OK">
+        </form>
+    </nav>
+</body>
+</html>

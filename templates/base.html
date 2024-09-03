@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/main.css')}}">
+</head>
+<body>
+    <section class="cabecalho">       
+        <div id="parametros">
+            <form action="/scan" method="post">
+                <div id="carteira">
+                    {% for item in ativos %}
+                        {% if item['ticker'] in carteira %}
+                        <input type="checkbox" name="check1" id="item['ticker']" value="{{ item['ticker'] }}" checked>
+                        {% else %}
+                        <input type="checkbox" name="check1" id="item['ticker']" value="{{ item['ticker'] }}">
+                        {% endif %}
+                        <label for="{{ item['ticker'] }}" name="{{ item['ticker'] }}">{{ item['ticker'] }}</label><br>
+                    {% endfor %}
+                </div>
+                <div id="operacoes">
+                    {% for item in operacoes_disponiveis %}
+                        {% if item in operacoes_escolhidas %}
+                        <input type="checkbox" name="check2" id="item" value="{{ item }}" checked>
+                        {% else %}
+                        <input type="checkbox" name="check2" id="item" value="{{ item }}">
+                        {% endif %}
+                        <label for="{{ item }}" name="{{ item }}">{{ item }}</label><br>
+                    {% endfor %}
+                </div>
+                <div>
+                    <label for="selectVencto">Selecione o Vencimento:</label>
+                    <select name="selectVencto">
+                        {% for item in series %}
+                        <option value="{{ item['data'] }}">{{ item['data'] }} {{ item['du'] }} du</option>
+                        {% endfor %}
+                    </select>
+                    <input type="text" id="vencto" name="vencimento" value="{{ parameters['vencimento']['du'] }} dias uteis">
+                    <input type="text" id="serieC" name="serieCall" value="{{ parameters['vencimento']['serieCall'] }}">
+                    <input type="text" id="serieP" name="seriePut" value="{{ parameters['vencimento']['seriePut'] }}">
+                </div>
+                <input type="submit" value="Scan">
+            </form>
+        </div>
+    </section>
+    <section class="painel">
+        <table class="table" id="tabela">
+            <tr class="table__header">
+                <th class="table__header__cell" ></th>
+                <th class="table__header__cell" ></th>
+                <th class="table__header__cell" ></th>
+                <th class="table__header__cell" colspan="2">Premio</th>
+                <th class="table__header__cell">Breakeven</th>
+                <th class="table__header__cell" colspan="4">Put Buy</th>
+                <th class="table__header__cell" colspan="4">Put Sell</th>
+                <th class="table__header__cell" >Atual</th>
+                <th class="table__header__cell" colspan="4">Call Sell</th>
+                <th class="table__header__cell" colspan="4">Call Buy</th>
+                <th class="table__header__cell">Breakeven</th>
+            </tr>
+            <tr class="table__header">
+                <th class="table__header__cell">Operação</th>
+                <th class="table__header__cell">Ativo</th>
+                <th class="table__header__cell">Seleção</th>
+                <th class="table__header__cell">Total</th>
+                <th class="table__header__cell">%</th>
+                <th class="table__header__cell">Down</th>
+                <th class="table__header__cell">Código</th>
+                <th class="table__header__cell">Premio</th>
+                <th class="table__header__cell">Delta</th>
+                <th class="table__header__cell">Strike</th>
+                <th class="table__header__cell">Código</th>
+                <th class="table__header__cell">Premio</th>
+                <th class="table__header__cell">Delta</th>
+                <th class="table__header__cell">Strike</th>
+                <th class="table__header__cell">Ativo</th>
+                <th class="table__header__cell">Strike</th>
+                <th class="table__header__cell">Delta</th>
+                <th class="table__header__cell">Premio</th>
+                <th class="table__header__cell">Código</th>
+                <th class="table__header__cell">Strike</th>
+                <th class="table__header__cell">Delta</th>
+                <th class="table__header__cell">Premio</th>
+                <th class="table__header__cell">Código</th>
+                <th class="table__header__cell">Up</th>
+            </tr>
+            {% for item in tabela %}
+            <tr class="table__row">
+                <!-- Resumo -->
+                <td class="table__row__text">{{ item[20] }}</td>
+                <td class="table__row__text">{{ item[0] }}</td>
+                <td><input type='radio' name='select' value="{{ item[2] }}">
+                <td class="table__row__number">{{ "%.2f"|format(item[3]|float) }}</td>
+                <td class="table__row__number">{{ "%.2f"|format(item[3]|float/item[1] * 100) }}</td>
+                <td class="table__row__number">{{ "%.2f"|format(item[1] - item[3]|float) }}</td>
+                <!-- Perna da Compra -->
+                {% if item[4] != '9999' %}
+                <td class="table__row__text">{{ item[4] }}</td>
+                <td class="table__row__number">{{ "%.2f"|format(item[6]|float) }}</td>
+                <td class="table__row__number">{{ "%.2f"|format(item[7]|float) }}</td>
+                <td class="table__row__strike">{{ item[5] }}</td>
+                {% else %}
+                <td class="table__row__text"></td>
+                <td class="table__row__number"></td>
+                <td class="table__row__number"></td>
+                <td class="table__row__strike"></td>
+                {% endif %}
+                <!-- Perna da Venda -->
+                {% if item[8] != '9999' %}
+                <td class="table__row__text">{{ item[8] }}</td>
+                <td class="table__row__number">{{ "%.2f"|format(item[10]|float) }}</td>
+                <td class="table__row__number">{{ "%.2f"|format(item[11]|float) }}</td>
+                <td class="table__row__strike">{{ "%.2f"|format(item[9]|float) }}</td>
+                {% else %}
+                <td class="table__row__text"></td>
+                <td class="table__row__number"></td>
+                <td class="table__row__number"></td>
+                <td class="table__row__strike"></td>
+                {% endif %}
+                <td class="table__row__central">{{ "%.2f"|format(item[1]|float) }}</td>
+                <!-- Perna da Venda -->
+                {% if item[12] !='9999' %}
+                <td class="table__row__strike">{{ "%.2f"|format(item[13]|float) }}</td>
+                <td class="table__row__number">{{ "%.2f"|format(item[15]|float) }}</td>
+                <td class="table__row__number">{{ "%.2f"|format(item[14]|float) }}</td>
+                <td class="table__row__text">{{ item[12] }}</td>
+                {% else %}
+                <td class="table__row__strike"></td>
+                <td class="table__row__number"></td>
+                <td class="table__row__number"></td>
+                <td class="table__row__text"></td>
+                {% endif %}
+                <!-- Perna da Compra -->
+                {% if item[16] !='9999' %}
+                <td class="table__row__strike">{{ item[17] }}</td>
+                <td class="table__row__number">{{ "%.2f"|format(item[19]|float) }}</td>
+                <td class="table__row__number">{{ "%.2f"|format(item[18]|float) }}</td>
+                <td class="table__row__text">{{ item[16] }}</td>
+                {% else %}
+                <td class="table__row__strike"></td>
+                <td class="table__row__number"></td>
+                <td class="table__row__number"></td>
+                <td class="table__row__text"></td>
+                {% endif %}
+                <td class="table__row__number">{{ "%.2f"|format(item[1] + item[3]|float) }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </section>
+    <script src="/static/script/main.js"></script>
+</body>
+</html>
